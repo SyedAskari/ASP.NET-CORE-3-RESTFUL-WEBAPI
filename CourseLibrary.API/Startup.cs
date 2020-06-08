@@ -1,3 +1,4 @@
+using AutoMapper;
 using CourseLibrary.API.DbContexts;
 using CourseLibrary.API.Services;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace CourseLibrary.API
 {
@@ -28,7 +30,17 @@ namespace CourseLibrary.API
                setupAction.ReturnHttpNotAcceptable = true;
                // Provide XML Serialization as well
            }).AddXmlDataContractSerializerFormatters();
-             
+
+            /*
+             * A profile is a neat way to organize our mapping configurations
+             * AddAutoMapper allows us to input a set of assemblies
+             * It's these assemblies that will automatically get scanned for profiles 
+             * that contain mapping configurations
+             * AppDomain.CurrentDomain.GetAssemblies() will load profiles from all assemblies 
+             * in the current domain
+             */
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddScoped<ICourseLibraryRepository, CourseLibraryRepository>();
 
             services.AddDbContext<CourseLibraryContext>(options =>
@@ -44,6 +56,18 @@ namespace CourseLibrary.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                // For the production environment, configuring a custom message for server side exceptions
+                app.UseExceptionHandler(appBuilder =>
+                {
+                    appBuilder.Run(async context =>
+                    {
+                        context.Response.StatusCode = 500;
+                        await context.Response.WriteAsync("An unexpected fault happened. Try again later");
+                    });
+                });
             }
 
             app.UseRouting();
