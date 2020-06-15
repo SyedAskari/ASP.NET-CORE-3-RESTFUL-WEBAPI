@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CourseLibrary.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace CourseLibrary.API.Profiles
         public CoursesProfile()
         {
             CreateMap<Entities.Course, Models.CourseDto>();
+            CreateMap<Models.CourseForCreationDto, Entities.Course>();
         }
     }
 }
