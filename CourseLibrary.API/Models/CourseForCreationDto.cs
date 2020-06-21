@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 
 namespace CourseLibrary.API.Models
 {
-    [TitleDescriptionMustBeDifferent(ErrorMessage ="Title must be different from description")]
+
+    public class CourseForCreationDto : CourseForManipulationDto
+    {
+    }
+
+    /*[TitleDescriptionMustBeDifferent(ErrorMessage ="Title must be different from description")]
     public class CourseForCreationDto //: IValidatableObject
     {
         [Required(ErrorMessage ="You should fill out a title")]
@@ -16,14 +21,14 @@ namespace CourseLibrary.API.Models
         [MaxLength(1500)]
         public string Description { get; set; }
 
-        /*public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        *//*public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if(Title == Description)
             {
                 yield return new ValidationResult("The provided description should be different from the title.", new[] { "CourseForCreationDto" });
             }
-        }*/
+        }*//*
 
         
-    }
+    }*/
 }
